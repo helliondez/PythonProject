@@ -1,6 +1,7 @@
 listTasks = []
 count = 0
-
+#this is just a thing i dont fully understand
+#but maybe one day it will fit into my brain
 def addTask(inputprompt):
     global count
     taskData = {}
