@@ -1,45 +1,95 @@
+from datetime import datetime
 listTasks = []
 count = 0
-#this is just a thing i dont fully understand
-#but maybe one day it will fit into my brain
+
 def addTask(inputprompt):
     global count
+    now = datetime.now()
     taskData = {}
     count += 1
     taskData["id"] = count
     taskData["status"] = "todo"
     taskData["description"] = inputprompt
-    taskData["createdAt"] = "when it was made"
+    taskData["createdAt"] = now.strftime("%b %d %Y %I:%M%p")
     taskData["updatedAt"] = taskData["createdAt"]
     listTasks.append(taskData)
+
 def changeTask(x, inputprompt):
-    for items in listTasks:
-        if items == x:
-            print("hi!")
-    listTasks[x] = inputprompt
+    now = datetime.now()
+    found = False
+    for itemWithTonsOfKeysForTheUserCreatedTask in listTasks:
+        if itemWithTonsOfKeysForTheUserCreatedTask["id"] == int(x):
+            itemWithTonsOfKeysForTheUserCreatedTask["description"] = inputprompt
+            itemWithTonsOfKeysForTheUserCreatedTask["updatedAt"] = now.strftime("%b %d %Y %I:%M%p")
+            found = True
+    if not found:
+        print("task not found to change.")
+
 def removeTask(inputprompt):
-    for items in listTasks:
-        if items["id"] == inputprompt:
-            listTasks.remove(items)
-        else:
-            print("your crazy thats not real")
+    found = False
+    for itemWithTonsOfKeysForTheUserCreatedTask in listTasks:
+        if itemWithTonsOfKeysForTheUserCreatedTask["id"] == int(inputprompt):
+            listTasks.remove(itemWithTonsOfKeysForTheUserCreatedTask)
+            found = True
+    if not found:
+        print("task not found to delete.")
+
+def markTask(place, taskStatus):
+    if taskStatus == "done":
+        for itemWithTonsOfKeysForTheUserCreatedTask in listTasks:
+            if itemWithTonsOfKeysForTheUserCreatedTask["id"] == int(place):
+                itemWithTonsOfKeysForTheUserCreatedTask["status"] = taskStatus
+    elif taskStatus == "in-progress":
+        for itemWithTonsOfKeysForTheUserCreatedTask in listTasks:
+            if itemWithTonsOfKeysForTheUserCreatedTask["id"] == int(place):
+                itemWithTonsOfKeysForTheUserCreatedTask["status"] = taskStatus
+
 def main():
     userInput = ""
+    
     while True:
-        for tasks in listTasks:
-            print(f"{tasks}\n")
-        option = input("wat you doin'? ")
+
+        option = input("What option? ")
+
         if option == "add":
-            userInput = input("Enter something: ")
+            userInput = input("add your task: ")
             addTask(userInput)
+
         elif option == "change":
-            place = input("which place?")
-            userInput = input("Enter something: ")
+            place = input("which task? ")
+            userInput = input(f"changing your task at {place}: ")
             changeTask(place, userInput)
+
         elif option == "delete":
-            userInput = input("Enter something: ")
+            userInput = input("which task to delete?: ")
             removeTask(userInput)
+        
+        elif option == "mark task":
+            place = input("Which task? ")
+            userInput = input("change to either done or in-progress")
+            markTask(place, userInput)
+
+        elif option == "list":
+            for task in listTasks:
+                print(f"{task}\n")
+
+        elif option == "list done":
+            for task in listTasks:
+                if task["status"] == "done":
+                    print(f"{task}\n")
+
+        elif option == "list todo":
+            for task in listTasks:
+                if task["status"] == "todo":
+                    print(f"{task}\n")
+
+        elif option == "list in-progress":
+            for task in listTasks:
+                if task["status"] == "in-progress":
+                    print(f"{task}\n")
+
         else:
             print("Lame")
+
 if __name__ == "__main__":
     main()
